@@ -14,17 +14,15 @@
    },
 
   "dependencies": {
-    "p2p-node": "0.1.x"
-  },
-  "devDependencies": {
-    "crypto-hashing": "0.1.x"
+    "TLS-p2p-node": "git://github.com/GammaSQ/TLS-p2p-node#master",
+    "underscore": "1.7.x"
   },
   "devDependencies": {
     "mocha": "1.*"
   },
 
   "repository": {
-    "url": "https://github.com/cryptocoinjs/p2p-manager",
+    "url": "https://github.com/GammaSQ/TLS-p2p-manager",
     "type": "git"
   },
 

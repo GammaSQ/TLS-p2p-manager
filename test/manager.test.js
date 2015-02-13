@@ -1,24 +1,26 @@
+var settings = require('../lib/settings');
 var PeerManager = require('../lib/PeerManager').PeerManager;
-var Peer = require('p2p-node').Peer;
+var Peer = require('TLS-p2p-node').Peer;
 var assert = require("assert");
-var net = require('net');
+var tls = require('tls');
+var net = require('net')
 
 describe('P2P PeerManager', function() {
   it('should properly connect to indicated host', function(done) {
     var localManager = new PeerManager({listen:false});
     localManager.on('error', function(err) {
       if (err.severity !== 'info' && err.severity !== 'notice') {
-        console.log(err);
+        //console.log(err);
         assert.ok(false);
       }
     });
-    var server = net.createServer(function(socket) {
+    var server = tls.createServer(settings.TLS_server_options, function(socket) {
       server.close();
       localManager.shutdown();
       done();
     });
     server.listen(function() {
-      localManager.launch([{host:server.address().address, port:server.address().port}]);
+      localManager.initiate([{host:server.address().address, port:server.address().port}]);
     });
   });
   describe('Messaging', function() {
@@ -29,7 +31,8 @@ describe('P2P PeerManager', function() {
     
     beforeEach(function(done) {
       serverPeer = false;
-      server = net.createServer(function(socket) {
+      server = tls.createServer(settings.TLS_server_options, function(socket) {
+        var target_proto = new tls.createSecurePair().cleartext.__proto__;
         serverPeer = new Peer(socket.remoteAddress, socket.remotePort, magic);
         serverPeer.connect(socket);
         done();
@@ -39,7 +42,7 @@ describe('P2P PeerManager', function() {
         //console.log(err.severity+': '+err.message);
       });
       server.listen(function() {
-        localManager.launch([{host:server.address().address, port:server.address().port}]);
+        localManager.initiate([{host:server.address().address, port:server.address().port}]);
       });
     });
     
@@ -73,7 +76,8 @@ describe('P2P PeerManager', function() {
           assert.ok(false);
         }
       });
-      localManager.once('helloMessage', function(d) {
+      localManager.once('message', function(d) {
+        assert.equal(d.command, 'hello')
         assert.equal(d.data.toString('utf8'), 'world');
         clearInterval(timer);
         done();
@@ -108,7 +112,7 @@ describe('P2P PeerManager', function() {
     managerServer.on('error', function(err) {
       //console.log(err.severity+': '+err.message);
     });
-    managerServer.launch([]);
+    managerServer.initiate([]);
 
     afterEach(function() {
       if (localPeer !== false) localPeer.destroy();
