@@ -1,5 +1,5 @@
-# P2P Manager
-Manage a network of peers in a peer-to-peer network.
+# TLS P2P Manager
+Manage a network of TLS-peers in a peer-to-peer network.
 
 ## Messages
 

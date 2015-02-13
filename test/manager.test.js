@@ -3,7 +3,7 @@ var PeerManager = require('../lib/PeerManager').PeerManager;
 var Peer = require('TLS-p2p-node').Peer;
 var assert = require("assert");
 var tls = require('tls');
-var net = require('net')
+var net = require('net');
 
 describe('P2P PeerManager', function() {
   it('should properly connect to indicated host', function(done) {
@@ -59,8 +59,7 @@ describe('P2P PeerManager', function() {
           assert.ok(false);
         }
       });
-      localManager.once('message', function(d) {
-        assert.equal(d.command, 'hello');
+      localManager.once('helloMessage', function(d) {
         assert. equal(d.data.toString('utf8'), 'world');
         clearInterval(timer);
         done();
