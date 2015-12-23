@@ -1,6 +1,17 @@
 # TLS P2P Manager
 Manage a network of TLS-peers in a peer-to-peer network.
 
+### self signed certs:
+For testing purposes, you will have to supply certificates. This module does not check certificates (since identity is determined from encrypted message cotent), therefore self-signed certificates are fine. What certificates are used can be set in settings.js.
+To generate certs (with default names) for testing, use openssl:
+
+```
+openssl genrsa -out key.pem 1024
+openssl req -new -key key.pem -out req.csr
+openssl x509 -req -days 3650 -in req.csr -signkey key.pem -out cert.pem
+rm req.csr
+```
+
 ## Messages
 
 ### `peerConnect`, `peerEnd`, `peerError`

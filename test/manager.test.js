@@ -1,9 +1,9 @@
-var settings = require('../lib/settings');
+var path = require('path');
+var settings = require(path.join(process.cwd(),'config'))
 var PeerManager = require('../lib/PeerManager').PeerManager;
 var Peer = require('TLS-p2p-node').Peer;
 var assert = require("assert");
-var tls = require('tls');
-var net = require('net');
+var onlinepackage = settings.useTLS? require('tls') : require('net');
 
 describe('P2P PeerManager', function() {
   it('should properly connect to indicated host', function(done) {
@@ -14,7 +14,7 @@ describe('P2P PeerManager', function() {
         assert.ok(false);
       }
     });
-    var server = tls.createServer(settings.TLS_server_options, function(socket) {
+    var server = onlinepackage.createServer(settings.TLS_server_options, function(socket) {
       server.close();
       localManager.shutdown();
       done();
@@ -31,8 +31,7 @@ describe('P2P PeerManager', function() {
     
     beforeEach(function(done) {
       serverPeer = false;
-      server = tls.createServer(settings.TLS_server_options, function(socket) {
-        var target_proto = new tls.createSecurePair().cleartext.__proto__;
+      server = onlinepackage.createServer(settings.TLS_server_options, function(socket) {
         serverPeer = new Peer(socket.remoteAddress, socket.remotePort, magic);
         serverPeer.connect(socket);
         done();

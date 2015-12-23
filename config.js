@@ -1,6 +1,7 @@
 fs = require('fs');
 
 module.exports = {
+  useTLS:true,
   defaultOptions: {
     'useCache': true,
     'lsiten': true,
@@ -16,6 +17,11 @@ module.exports = {
     cert: fs.readFileSync('cert.pem'),
     rejectUnauthorized:false,
     requestCert:true
+  },
+  TLS_connection_options: {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem'),
+    rejectUnauthorized:false
   },
   TIMEOUT: 5*1000,
   checkInterval:60*1000 //1 minute
